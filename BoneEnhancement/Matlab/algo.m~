@@ -1,0 +1,239 @@
+%% Parameters
+%   Blur Image and get Derivatives
+% m, filter size
+% sig, sigma
+%   Shadow Image
+% m, number of pixels to visit
+% sig, sigma
+% srate, sampling rate for the gaussian weighting function
+%   Thresholding
+% uthresh, upper threshold for keeping a bone pixel
+% lthresh, lower threshold for keeping a bone pixel
+
+%% Load the Image
+load PhantomSpine
+% hlder holds the image
+hlder = output;
+% Ignore the top few rows as the paper discussed 
+hlder(1:10, :) = [];
+[r, c] = size(hlder);
+
+imwrite(uint8(hlder.*255/max(max(hlder))), 'original.png')
+
+%% Code for Ignoring small pixels
+% mx = max(max(hlder));
+% thresh = 0.01*mx;
+% hlder(1:10,:) = 0;
+% for x = 1:1:r
+%     for y = 1:1:c
+%         if hlder(x,y) < thresh
+%             hlder(x,y) = 0;
+%         end
+%     end
+% end
+
+%% Blur Image and get Derivatives
+m = 13;
+sig = 1.1;
+
+G = fspecial('gaussian', [m m], sig);
+m = int32(m);
+blurred = imfilter(hlder,G,'same');
+imwrite(uint8(blurred.*255/max(max(hlder))), 'blurred.png')
+% M will hold both filters, differentiated and regular gaussian
+M = zeros(1,m,2);
+% differentiated gaussian filter is in z = 1 of M
+for x = 1:1:m
+    G = -double(x-m/2)/(sig^3*sqrt(2*pi))*exp(-(double(x-m/2))^2/(2*sig^2)); % differentiated gaussian equation
+    M(1,x,1) = G; % the differentiated gaussian is centered at m/2.
+end
+% Gaussian filter is in z = 2 of M
+for x = 1:1:m
+    G = 1/(sig*sqrt(2*pi))*exp(-(double(x-m/2))^2/(2*sig^2)); % gaussian equation
+    M(1,x,2) = G; % the gaussian is centered at m/2
+end
+padded = padarray(hlder, [double(m/2-1) double(m/2-1)], 'replicate');
+Gy = conv2(M(1,:,1), M(1,:,2), padded, 'valid'); % Gy is derivative in y direction after blurring
+% Erase the positive derivatives and negate
+for x = 1:1:r
+    for y = 1:1:c
+        if Gy(x,y) > 0
+            Gy(x,y) = 0;
+        end
+    end
+end
+Gy = -1.*Gy;
+imwrite(uint8(Gy.*255/max(max(Gy))),'differential.png')
+
+%% Reflection Image
+reflec = Gy+blurred; % reflec is the reflection number of the image
+imwrite(uint8(reflec.*255/max(max(reflec))),'reflection numbers.png')
+% normalize reflec to be between 0 and 1 
+reflec = (reflec - min(min(reflec)))/(max(max(reflec)) - min(min(reflec)));
+
+%% Shadow Image
+m = int32(51);
+sig = 1.1;
+srate = 0.1;
+
+wi = zeros(m,c); % wi will hold the gaussian weighting function
+count = 0;
+for x = 0:srate:srate*double(m)
+    count = count + 1;
+    G = 1/(sig*sqrt(2*pi))*exp(-(double(x))^2/(2*sig^2));
+    wi(count,:) = G;
+end
+norm = sum(wi(:,1));
+shadow = zeros(r,c); % shadow will hold the shadow image
+blurred(r+1:r+m+1,:) = 0; % Extend the image with 0's
+blurred = [zeros(m+1,c);blurred]; % Extend the image with 0's
+for x = m+2:1:r+m+1 % For each row
+    top = blurred(x-m-1:x-1,:).*(flipud(wi)); % take the sum of the m rows
+    % above as weighted by the gaussian weighting function
+    bottom = blurred(x+1:x+m+1,:).*wi; % and take the sum of the m rows
+    % below as weighted by the gaussian weighting function
+    weighted = top - bottom; % subtract them and normalize to get the shadow values for that row
+    shadow(x-m-1,:) = sum(weighted)/norm;
+end
+imwrite(uint8(shadow.*255/max(max(shadow))),'ShadowImage.png');
+
+%% Probability image
+probabi = shadow.*reflec; % probabi is the probability image for bones
+probabi = probabi./max(max(abs(probabi)));
+imwrite(uint8(probabi.*255),'ProbabilityImage.png');
+
+%% Hysterisis Thresholding
+uthresh = 0;
+lthresh = 0;
+
+% Get the maximum value in each column of probability image
+[val, ro] = max(probabi);
+% Initialize the first column to be bone or not bone
+if val(1) < uthresh
+    bone = false;
+else
+    bone = true;
+end
+% The bone outline will be drawn in red on holder
+% There will be at max 1 bone pixel per column
+hlder = uint8(hlder.*255/max(max(hlder)));
+hlder = hlder(:,:,[1 1 1]);
+% If a pixel is above the threshold it is a bone. If it is below the
+% threshold it is not a bone.
+% If the previous pixel was not a bone, the threshold for the next pixel
+% is higher than if the prevoius pixel was a bone.
+for x = 1:1:length(ro)
+    if bone
+        thresh = lthresh;
+    else
+        thresh = uthresh;
+    end
+    if val(x) > thresh
+        bone = true;
+        hlder(ro(x),x,1) = 255;
+    else
+        bone = false;
+    end
+end
+imwrite(hlder,'Thresholded.png');
+
+%% Thresholding Snake 
+ascale = 2;
+alpha = (ascale)*(1/1225);
+beta = (1/ascale)*(1/81225);
+gamma = -0.5;
+jumpcost = 0.3;
+D1 = 1;
+D2 = 1;
+bonreg = false;
+Eintb = 1.199;
+
+[val, ro] = max(probabi);
+cind = zeros(1,c);
+Enb = alpha*(D1^2) + beta(D2^2) + Eintb;
+vecext = [];
+vecds = [];
+vecdss = [];
+vecmin = [];
+veccin = [];
+vecreg = [];
+vecenb = [];
+vecint = [];
+for x = 2:1:c-1
+    minenergy = [0, 0];
+    if cind(x-1) == 0
+        xb = ro(x-1);
+    else
+        xb = cind(x-1);
+    end
+    if cind(x+1) == 0
+        xa = ro(x+1);
+    else
+        xa = cind(x+1);
+    end
+    for y = 1:1:r
+        Eint = (1 - 2*probabi(y,x));
+        %probabi(y,x)
+        %Eint
+        d1 = y - xb;
+        d2 = xa - y;
+        Ds = (d1+d2)/2;
+        Dss = d2-d1;
+        Eext = alpha*(Ds)^2 + beta*(Dss)^2 + gamma;
+        Etot = Eint + Eext;
+        if Etot < minenergy(1) || minenergy(2) == 0
+            Ephi = Eint;
+            Ephe = Eext;
+            minenergy(1) = Etot;
+            minenergy(2) = y;
+        end
+    end
+    %vecint = [vecint; Ephi];
+    %vecext = [vecext; Ephe];
+    %vecmin = [vecmin; minenergy(1)];
+    %vecenb = [vecenb; Enb];
+    if bonreg
+        if minenergy(1) < (Enb + jumpcost)
+            % bone region and the energy of staying in is less then the
+            % energy of jumping
+            cind(x) = minenergy(2);
+        else
+            % bone region and the energy of jumping is less then staying in
+            cind(x) = 0;
+            bonreg = false;
+        end
+    else
+        if Enb < (minenergy(1) + jumpcost)
+            % not bone region and the energy of staying in is less then the
+            % energy of jumping
+            cind(x) = 0;
+        else
+            cind(x) = minenergy(2);
+            bonreg = true;
+        end
+    end
+    %vecreg = [vecreg; bonreg];
+    %veccin = [veccin; cind(x)];
+end
+%hlder = uint8(hlder.*255/max(max(hlder)));
+hlder = hlder(:,:,[1 1 1]);
+for x = 1:1:length(cind)
+    if cind(x) ~= 0
+        hlder(cind(x),x,1) = 255;
+    end
+end
+imwrite(hlder,'SnakeThresh.png');
+
+% plot(vecext)
+% hold on
+% plot(vecint)
+% hold on
+% plot(vecint+vecext)
+% 
+% % plot(vecmin)
+% % hold on
+% % plot(vecenb)
+% % hold on
+% % plot(vecenb+jumpcost)
+% % hold on
+% % plot(vecmin+jumpcost)

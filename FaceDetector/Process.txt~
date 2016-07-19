@@ -1,0 +1,24 @@
+%% Set up
+% To generate the 100 face and non-faces run gendset. The patches will be contained in 'ChosenFaces' and 'ChosenNoFaces'.
+gendset();
+
+% To generate the collage of faces and non-faces run collage, this function returns the collage.
+collage = collage();
+
+% To get the desired image to be tested, run getImage('image name.png'). 
+img = getImage('runners.png');
+
+%% Running gaussian algorithm
+% To run the gaussian algorithm run gauss with the desired non-maximum suppression area M and image img. The thresholds can be altered by looking at the 'Parameters' section in the gauss.m file. Results will be written to the 'GaussResults' folder.
+gauss(M, img);
+
+%% Running linear algorithm
+% To generate the weighting vector run weights. The learning rate and maximum iterations can be changed by looking at the 'Parameters' section in the weights.m file. Also the matlab.mat file contains the 3 weighting vectors used in the writeup. wgood is the optimal weighting vector from the writeup, wbad is the vector with a higher mu, and wlim is the weighting vector with less iterations.
+w = weights();
+
+% To run the linear algorithm run linear with the desired non-maximum suppression area M, image img, and weighting vector w. The results will be written to the 'LinearResults' folder.
+linear(M, img, w);
+
+%% Gaussian Pyramid
+% To generate a gaussian pyramid of an image run pyramid with the desired image img, number of layers, downsampling rate, sigma, and filtersize. The pyramid will be written to the 'ImagePyramid' folder.
+pyramid(img, 8, 6, 0.8, 13);

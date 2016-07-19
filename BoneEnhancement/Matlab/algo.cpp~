@@ -1,0 +1,17 @@
+//
+//  algo.cpp
+//
+
+#include <iostream>
+#include "Image.cpp"
+#include <fstream>
+
+using namespace std;
+
+int main() {
+
+    MImage img("1.png");
+    img.write("output.png");
+    return 0;
+
+}

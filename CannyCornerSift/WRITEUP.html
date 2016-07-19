@@ -1,0 +1,354 @@
+<html>
+ <head>
+  <title>Crispin Bernier</title>
+ </head>
+ <body>
+    I am using 1 late day for this assignment. <br>
+<br>
+The images in this writeup in their original sizes are contained in the image folders. The source images and the Matlab code are contained in the main folder. Each algorithm is contained in a single Matlab file that can be run as a function. All output from running these algorithms will be written to the output folder. All of the following images were output from running the algorithms.
+<br>
+<br>
+  <strong> Canny Edge Detector </strong> <br>
+    There are 5 parameters for the canny edge detector, there purpose and the affect of changing them are described below. <br>
+    Parameters: <br>
+    1. m (size of gaussian filter): The gaussian filter that is applied to the image will be a mxm square. The gaussian will be centered at the middle of this square, so it is good to make m an odd number so that it is symmetrical. It is also important to make m big enough to capture the entire gaussian distribution. If m is too small the gaussian will be cut off and won't reach pixels that are far away. This will cause the image to be dimmed which will reduce the intensity of the edges, and will also improperly blur the image so small edges won't be removed. <br>
+    2. sig (sigma of gaussian filter): The sigma value decides how much the image will be blurred. If the sigma is increased, it is important to make sure m is also increased to the appropriate size. Increasing sig will reduce the amount of small edges that are detected, like the fur in the mandrill image or the bricks in the building image. High sigma can also turn very strong edges into multiple edges, which is shown in the mandrill image below. <br>
+    3. T_H (high threshold): T_H and T_L are the high and low thresholds for hysteris thresholding as a percentage of the maximum edge strength. Increasing T_H decreases the number of edges in the final image. <br>
+    4. T_L (low threshold): Increasing T_L decreases the length of the edges in the final image, meaning each edge chain will comprise of fewer pixels. <br>
+    5. image: The image to be analyzed. <br>
+<br>
+The images are formatted the following way: <br>
+1. Original intensity image. 2. Magnitude of the x gradient after blurring. 3. Magnitude of the y gradient after blurring. <br>
+4. Magnitude of the total gradient after blurring. 5. Magnitude gradient trimmed. 6. Final output of the edge detector showing edge intensity. <br>
+7. Same output but showing what chain each edge belongs to. <br>
+<br>    
+
+For the Mandrill image it was necessary to use a large sigma value to decrease the effect of the fur and capture only the essential aspects of the face. This image also demonstrates the multiple edging effect that high sigma values have on strong edges, such as those around the eyes. The following settings were found to be ideal for the mandrill image. <br>
+m = 21, sig = 3, T_H = 0.25, T_L = 0.15, image = mandrill.jpg.<br>
+<br>
+  <img src = "Canny Images/Mandrill/initial.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/ES.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/CE.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/chainmap.png" width="384" height="288">
+<br>
+<br>
+For the building image, to only get the outline of the buildings the following settings were used. This sigma value is large like with the mandrill image. <br>
+m = 25, sig = 3.5, T_H = 0.4, T_L = 0.35, image = building.jpg. <br>
+<br>
+  <img src = "Canny Images/Building/initial.png" width="384" height="288">
+  <img src = "Canny Images/Building/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Building/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Building/ES.png" width="384" height="288">
+  <img src = "Canny Images/Building/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Building/CE.png" width="384" height="288">
+  <img src = "Canny Images/Building/chainmap.png" width="384" height="288">
+<br>
+<br>
+To get the details of the buildings, like the individual bricks, the following settings were used. The sigma and thresholds need to be smaller to capture the details. <br>
+m = 9, sig = 0.8, T_H = 0.25, T_L = 0.1, image = building.jpg. <br>
+<br>
+  <img src = "Canny Images/Building Detailed/initial.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/ES.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/CE.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/chainmap.png" width="384" height="288">
+<br>
+<br>
+This is an example image I found on flickr. The following settings seemed to work best for capturing the important edges, such as the outline of the car. The wheels were hard to capture because they blend in to the shadow and in to the rest of the car.<br>
+m = 11, sig = 1.5, T_H = 0.25, T_L = 0.2, image = mercedes.jpg. <br>
+<br>
+  <img src = "Canny Images/Mercedes/initial.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/ES.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/CE.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/chainmap.png" width="384" height="288">
+<br>
+<br>
+This is an image I found on flickr. The following settings give a good outline of the focus. The circular lens flare is very intense and can't be blurred out. <br>
+m = 11, sig = 1, T_H = 0.15, T_L = 0.1, image = leaf.jpg. <br>
+<br>
+  <img src = "Canny Images/Leaf/initial.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/ES.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/CE.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/chainmap.png" width="384" height="288">
+<br>
+<br>
+This is another flickr image run through the edge detector. <br>
+m = 17, sig = 2, T_H = 0.25, T_L = 0.15, image = lighthouse.jpg. <br>
+<br>
+  <img src = "Canny Images/Lighthouse/initial.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/ES.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/CE.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/chainmap.png" width="384" height="288">
+
+<br>
+<br>
+  <strong> Corner Detector </strong> <br>
+    There are 5 parameters for the corner detector. <br>
+    Parameters: <br>
+    1. m (size of gaussian filter): This works the same as for the edge detector, it needs to contain the entire gaussian to work properly. <br>
+    2. sig (sigma of gaussian filter): This works the same as for the edge detector. Increased blurring decreases the strength of corners and reduces the number of corners detected in noisy areas, but also decreases the sensitivity of the detector to small corners. <br>
+    3. cs (corner neighborhood): The neighborhood around each potential corner pixel will be csxcs. Increasing this value will allow larger corners to be detected but will also increase the eigenvalue of each neighborhood across the image, so it is necessary to increase the threshold when increasing cs so the appropriate amount of corners are detected. <br>
+    4. thresh (corner threshold): This is the threshold on the lower eigenvalue for keeping a corner. Lowering the threshold allows more corners to be drawn. The strength of the eigenvalues of a neighborhood were determined by varying this thresh value and seeing which neighborhoods remained and which were removed. <br>
+    5. image: The image to be analyzed. <br>
+<br>
+The following are results from the corner detector using the best parameters I could find. The images are grayscale from 0 to 255. The csxcs region a corner was detected in is outlined in black. The images are as follows, <br>
+1. Magnitude of the x gradient after blurring. 2. Magnitude of the y gradient after blurring. 3. Magnitude of the total gradient after blurring. <br>
+4. The final image with the corners drawn on. <br>
+<br>
+To get all the corners on the checkerboard the following settings were used. Because the checkerboard has clear, sharp corners that are high contrasting from black to white, the corners are easy to find. Also certain corners that are extra strong have two or more neighborhoods connected to each other.<br>
+m = 11, sig = 1, cs = 15, thresh = 40000, image = checker.jpg <br>
+<br>
+  <img src = "Corner Images/Checkers/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Checkers/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Checkers/ES.png" width="484" height="388">
+  <img src = "Corner Images/Checkers/corner.png" width="484" height="388">
+<br>
+<br>
+To produce the best settings for the building image, it was necessary to increase the neighborhood for each corner, cs, to capture large corners. From varying the threshold value, the strongest corners appear to be near the windows on the left side of the image and near the two towers on the bottom right side of the image. These may not necessarily be what we would call corners, but they are where the eigenvalues are very strong. <br>
+m = 11, sig = 1, cs = 23, thresh = 65000, image = building.jpg <br>
+<br>
+  <img src = "Corner Images/Building/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Building/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Building/ES.png" width="484" height="388">
+  <img src = "Corner Images/Building/corner.png" width="484" height="388">
+<br> 
+<br>
+These are the results from the corner detector on other images using parameters that seemed to appropriately capture the corners. <br>
+This image was blurred with a higher sigma to reduce the amount of edges the fur triggers. The strongest corners are around the eyes. <br>
+m = 15, sig = 2, cs = 17, thresh = 8500, image = mandrill.jpg <br>
+<br>
+  <img src = "Corner Images/Mandrill/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Mandrill/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Mandrill/ES.png" width="484" height="388">
+  <img src = "Corner Images/Mandrill/corner.png" width="484" height="388">
+<br> 
+<br>
+As would be expected the strongest corners are detected around the lettering, where there are sharp turns and high contrasts. <br>
+m = 11, sig = 1, cs = 11, thresh = 30000, image = mercedes.jpg <br>
+<br>
+  <img src = "Corner Images/Mercedes/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Mercedes/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Mercedes/ES.png" width="484" height="388">
+  <img src = "Corner Images/Mercedes/corner.png" width="484" height="388">
+<br> 
+<br>
+The corners in this image are hard to define, but the edge detector does a good job of picking out the tips of the leafs and points along the branch that stand out. The strongest corners are near the tips of the leafs, which again was determined by varying the thresh value. <br>
+m = 13, sig = 1, cs = 15, thresh = 15000, image = leaf.jpg <br>
+<br>
+  <img src = "Corner Images/Leaf/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Leaf/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Leaf/ES.png" width="484" height="388">
+  <img src = "Corner Images/Leaf/corner.png" width="484" height="388">
+<br> 
+<br>
+These settings were chosen so a corner appears at the lighthouse. The lighthouse is the weakest corner in this image, the strongest are in the rocks towards the bottom left of the image. <br>
+m = 19, sig = 2, cs = 15, thresh = 13000, image = lighthouse.jpg <br>
+<br>
+  <img src = "Corner Images/Lighthouse/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Lighthouse/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Lighthouse/ES.png" width="484" height="388">
+  <img src = "Corner Images/Lighthouse/corner.png" width="484" height="388">
+<br> 
+<br>
+<br>
+  <strong> SIFT Feature Detector </strong> <br>
+    NOTE: The sift algorithm runs kind of slow so I included some progress indicators. The first one is for the initial localization of all potential points, it shows how many octaves are remaining to be searched. The second one is for thresholding all of these points, it shows how many scale levels are remaining to be thresholded. <br>
+<br>
+    There are 7 parameters for the SIFT algorithm, there purpose and the affect of changing them are described below. <br>
+    Parameters: <br>
+    1. m (size of gaussian filter): This works the same as before, m needs to be big enough to contain the entire gaussian. Because there will be s+3 gaussian functions generated, where s is another parameter, and they will all be a factor of k apart, where k is given in the paper as 2^(1/s), it is necessary to make m big enough to contain the largest gaussian that will be generated. Therefore m will tend to be much larger than it was in the previous algorithms. <br>
+    2. siginit (initial sigma of gaussian filter): Siginit is the initial sigma value for the gaussian pyramid that will be created. Successive gaussian pyramids are created using the same sigma value but the image is downscaled so the gaussians have twice the effect. The initial sigma given in the paper is 1.6. <br>
+    3. octaves (number of octaves in laplacian pyramid): Each octave is another gaussian pyramid. I used 4 as the standard number, but this can be lowered to speed up running time. <br>
+    4. ct (contrast threshold): This is the threshold for removing points based on their value in the laplacian pyramid. This requires first finding the true value for each sample point, as the paper describes. This threshold is a percentage of the maximum sample value. <br>
+    5. et (edge threshold): This is the threshold for removing edge points, which is determined from the hessian matrix calculated around each point. <br>
+    6. s (number of sample regions per octave): This determines the size of each octave. The paper gives s = 3 as the standard value, which gives 3 sampling levels per octave, which is 5 laplacians per octave, which is 6 gaussians per octave. <br>
+    7. image: The image to be analyzed. <br>
+<br>
+The images are formatted the following way: <br>
+1. Original intensity image. 2a-2p. The pyramid of laplacians. 3. Initial localization of feature points, the size of the square around each point is proportional to the scale that point is located in. <br>
+4. Location and scale of feature points after thresholding. The same descriptor is used as before. <br>
+NOTE: The descriptor depends on how many samples of scale space were taken on that run of the algorithm, and is not based on some absolute scale. Therefore the size of the squares can't be compared across runs with different parameters because the sizes are relative to the parameters. <br>
+<br>
+The siginit used here is slightly higher than that given in the paper, which means the scale space sampling will start higher up and will be sampled more sparsely. These produced expected results as the small scale features in the fur were blurred out for the most part and there are less of them in the final image. Larger features were found near the eyes and nose. This is expected because at higher scales small features like the fur get blurred out and large features like the eyes become more prominent. <br>
+m = 37, siginit = 2, octaves = 4, ct = 0.3, et = 1, s = 3, image = mandrill.jpg <br>
+<br>
+  <img src = "Sift Images/Mandrill/d0.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d1.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d2.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d3.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d4.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d5.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d6.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d7.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d8.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d9.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d10.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d11.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d12.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d13.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d14.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d15.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/d16.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill/f2descripted.png" width="384" height="288">
+<br>
+<br>
+  This is the same image run with the same parameters but with the same sigma value given in the paper of 1.6. The smaller sigma allows smaller scale features to be displayed, which is evident in the fur in the upper corners of the image. <br>
+m = 37, siginit = 1.6, octaves = 4, ct = 0.3, et = 1, s = 3, image = mandrill.jpg
+<br>
+<br>
+  <img src = "Sift Images/Mandrill2/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Mandrill2/f2descripted.png" width="384" height="288">
+<br>
+<br>
+These parameters find features in a very predictable manner along each column of the building in the background of the image. Larger collumns, like those to the right of the image, have larger scale features. These parameters also provide a good example of the feature points moving from where they were initially localized to where their extrema value is maximized based on the Taylor series representation described in the paper. This is shown well near the bottom of the car between the tires. The initially detected features appear to gravitate slightly towards the front tire as they search for their maximum value. <br>
+m = 31, siginit = 1.6, octaves = 4, ct = 0.11, et = 3, s = 3, image = mercedes.jpg <br>
+<br>
+  <img src = "Sift Images/Mercedes/d0.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d1.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d2.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d3.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d4.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d5.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d6.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d7.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d8.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d9.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d10.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d11.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d12.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d13.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d14.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d15.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/d16.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes/f2descripted.png" width="384" height="288">
+<br>
+<br>
+These images are the same parameters but with an increased s value. This increases the number of samples taken per octave and decreases k, which means the scale space will be sampled more densly. As the image shows this increases the number of sample points.  <br>
+m = 31, siginit = 1.6, octaves = 4, ct = 0.11, et = 3, s = 4, image = mercedes.jpg
+<br>
+<br>
+  <img src = "Sift Images/Mercedes2/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Mercedes2/f2descripted.png" width="384" height="288">
+<br>
+<br>
+These images do a good job of showing how initially many low contrast features will be detected, such as in the sky and in the clouds, but are then eliminated using the contrast threshold. This image also shows the tendency of features to be detected near edges, such as along the slanted roof to the right of the image. <br>
+m = 31, siginit = 1.6, octaves = 4, ct = 0.11, et = 3, s = 3, image = building.jpg <br>
+<br>
+  <img src = "Sift Images/Building/d0.png" width="384" height="288">
+  <img src = "Sift Images/Building/d1.png" width="384" height="288">
+  <img src = "Sift Images/Building/d2.png" width="384" height="288">
+  <img src = "Sift Images/Building/d3.png" width="384" height="288">
+  <img src = "Sift Images/Building/d4.png" width="384" height="288">
+  <img src = "Sift Images/Building/d5.png" width="384" height="288">
+  <img src = "Sift Images/Building/d6.png" width="384" height="288">
+  <img src = "Sift Images/Building/d7.png" width="384" height="288">
+  <img src = "Sift Images/Building/d8.png" width="384" height="288">
+  <img src = "Sift Images/Building/d9.png" width="384" height="288">
+  <img src = "Sift Images/Building/d10.png" width="384" height="288">
+  <img src = "Sift Images/Building/d11.png" width="384" height="288">
+  <img src = "Sift Images/Building/d12.png" width="384" height="288">
+  <img src = "Sift Images/Building/d13.png" width="384" height="288">
+  <img src = "Sift Images/Building/d14.png" width="384" height="288">
+  <img src = "Sift Images/Building/d15.png" width="384" height="288">
+  <img src = "Sift Images/Building/d16.png" width="384" height="288">
+  <img src = "Sift Images/Building/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Building/f2descripted.png" width="384" height="288">
+<br>
+<br>
+These images are the same parameters but with an increased edge threshold. Although the edge threshold trimmed down the number of features around edges, low contrast regions such as around the clouds were also trimmed significantly.  <br>
+m = 31, siginit = 1.6, octaves = 4, ct = 0.11, et = 10, s = 3, image = building.jpg
+<br>
+<br>
+  <img src = "Sift Images/Building2/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Building2/f2descripted.png" width="384" height="288">
+<br>
+<br>
+These images were taken using 5 octaves as opposed to the 4 octaves in the ones previously. This doesn't appear to have given signficantly more features, possibly because at such high scales everything is a blurred mess and there is very little information to detect. <br>
+m = 31, siginit = 1.6, octaves = 5, ct = 0.2, et = 2, s = 3, image = lighthouse.jpg <br>
+<br>
+  <img src = "Sift Images/Lighthouse/d0.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d1.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d2.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d3.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d4.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d5.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d6.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d7.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d8.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d9.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d10.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d11.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d12.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d13.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d14.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d15.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d16.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d17.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d18.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/d19.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse/f2descripted.png" width="384" height="288">
+<br>
+<br>
+These images are the same parameters but with the standard number of octaves. They show adding additional octaves don't produce many more features. The extra octave in the images above produced only three extra high scale features, and this was reduced to two after thresholding. These appear near the bottom right of the image where the rocks meet the shore. <br>
+m = 31, siginit = 1.6, octaves = 4, ct = 0.2, et = 2, s = 3, image = lighthouse.jpg
+<br>
+<br>
+  <img src = "Sift Images/Lighthouse2/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Lighthouse2/f2descripted.png" width="384" height="288">
+<br>
+<br>
+The siginit used here is slightly lower than the standard. The s is also larger which means the scale space will be sampled extremely densely. This is shown in the detected feature points before thresholding. <br>
+m = 37, siginit = 0.6, octaves = 4, ct = 0.5, et = 20, s = 4, image = leaf.jpg <br>
+<br>
+  <img src = "Sift Images/Leaf/d0.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d1.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d2.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d3.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d4.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d5.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d6.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d7.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d8.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d9.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d10.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d11.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d12.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d13.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d14.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d15.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d16.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d17.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d18.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d19.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/d20.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Leaf/f2descripted.png" width="384" height="288">
+<br>
+<br>
+These are the same parameters with the siginit set at standard. Because raising the initial sigma significantly reduced the amount of feature points before thresholding, it can be concluded that in the small scale spaces many features will be detected. Also because the final amount of feature points after thresholding are relatively similar, and the same thresholds were used for both images, it can be concluded that these small scale feature points aren't very significant. <br>
+m = 37, siginit = 1.6, octaves = 4, ct = 0.5, et = 20, s = 4, image = leaf.jpg
+<br>
+<br>
+  <img src = "Sift Images/Leaf2/f1descripted.png" width="384" height="288">
+  <img src = "Sift Images/Leaf2/f2descripted.png" width="384" height="288">
+<br>
+<br>
+ </body>
+</html>

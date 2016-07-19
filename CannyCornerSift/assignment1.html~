@@ -1,0 +1,173 @@
+<html>
+ <head>
+  <title>Assignment 1</title>
+ </head>
+ <body>
+  <strong> Canny Edge Detector </strong> <br>
+    There are 4 parameters for the canny edge detector, there purpose and the affect of changing them are described below. <br>
+    Parameters: <br>
+    1. m (size of gaussian filter): The gaussian filter that is applied to the image will be a mxm square. The gaussian will be centered at the middle of this square, so it is good to make m an odd number so that it is symmetrical. It is also important to make m big enough to capture the entire gaussian distribution. If m is too small the gaussian will be cut off and won't reach pixels that are far away. This will cause the image to be dimmed which will reduce the intensity of the edges, and will also improperly blur the image so small edges won't be removed. <br>
+    2. sig (sigma of gaussian filter): The sigma value decides how much the image will be blurred. If the sigma is increased, it is important to make sure m is also increased to the appropriate size. Increasing sig will reduce the amount of small edges that are detected, like the fur in the mandrill image or the bricks in the building image. High sigma can also turn very strong edges into multiple edges, which is shown in the mandrill image below. <br>
+    3. T_H (high threshold): T_H and T_L are the high and low thresholds for hysteris thresholding as a percentage of the maximum edge strength. Increasing T_H decreases the number of edges in the final image. <br>
+    4. T_L (low threshold): Increasing T_L decreases the length of the edges in the final image, meaning each edge will comprise of fewer pixels. <br>
+<br>
+The images are formatted the following way: <br>
+1. Original intensity image. 2. Magnitude of the x gradient after blurring. 3. Magnitude of the y gradient after blurring. <br>
+4. Magnitude of the total gradient after blurring. 5. Magnitude gradient trimmed. 6. Final output of the edge detector. <br>
+The images are grayscale from 0 to 255. <br>
+<br>    
+
+For the Mandrill image it was necessary to use a large sigma value to decrease the effect of the fur and capture only the essential aspects of the face. This image also demonstrates the multiple edging effect that high sigma values have on strong edges, such as those around the eyes. The following settings were found to be ideal for the mandrill image. <br>
+m = 21, sig = 3, T_H = 0.25, T_L = 0.15.<br>
+<br>
+  <img src = "Canny Images/Mandrill/initial.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/ES.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Mandrill/CE.png" width="384" height="288">
+<br>
+<br>
+For the building image, to only get the outline of the buildings the following settings were used. This sigma value is large like with the mandrill image. <br>
+m = 25, sig = 3.5, T_H = 0.4, T_L = 0.35. <br>
+<br>
+  <img src = "Canny Images/Building/initial.png" width="384" height="288">
+  <img src = "Canny Images/Building/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Building/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Building/ES.png" width="384" height="288">
+  <img src = "Canny Images/Building/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Building/CE.png" width="384" height="288">
+<br>
+<br>
+To get the details of the buildings, like the individual bricks, the following settings were used. The sigma and thresholds need to be smaller to capture the details. <br>
+m = 9, sig = 0.8, T_H = 0.25, T_L = 0.1. <br>
+<br>
+  <img src = "Canny Images/Building Detailed/initial.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/ES.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Building Detailed/CE.png" width="384" height="288">
+<br>
+<br>
+This is an example image I found on flickr. The following settings seemed to work best for capturing the important edges, such as the outline of the car. The wheels were hard to capture because they blend in to the shadow and in to the rest of the car.<br>
+m = 11, sig = 1.5, T_H = 0.25, T_L = 0.2. <br>
+<br>
+  <img src = "Canny Images/Mercedes/initial.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/ES.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Mercedes/CE.png" width="384" height="288">
+<br>
+<br>
+This is an image I found on flickr. The following settings give a good outline of the focus. The circular lens flare is very intense and can't be blurred out. <br>
+m = 11, sig = 1, T_H = 0.15, T_L = 0.1. <br>
+<br>
+  <img src = "Canny Images/Leaf/initial.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/ES.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Leaf/CE.png" width="384" height="288">
+<br>
+<br>
+This is another flickr image run through the edge detector. <br>
+m = 17, sig = 2, T_H = 0.25, T_L = 0.15. <br>
+<br>
+  <img src = "Canny Images/Lighthouse/initial.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/Gx.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/Gy.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/ES.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/ES trimmed.png" width="384" height="288">
+  <img src = "Canny Images/Lighthouse/CE.png" width="384" height="288">
+
+<br>
+<br>
+  <strong> Corner Detector </strong> <br>
+    There are 4 parameters for the corner detector. <br>
+    Parameters: <br>
+    1. m (size of gaussian filter): This works the same as for the edge detector, it needs to contain the entire gaussian to work properly. <br>
+    2. sig (sigma of gaussian filter): This works the same as for the edge detector. Increased blurring decreases the strength of corners and reduces the number of corners detected in noisy areas, but also decreases the sensitivity of the detector to small corners. <br>
+    3. cs (corner neighborhood): The neighborhood around each potential corner pixel will be csxcs. Increasing this value will allow larger corners to be detected but will also increase the eigenvalue of each neighborhood across the image, so it is necessary to increase the threshold when increasing cs so the appropriate amount of corners are detected. <br>
+    4. thresh (corner threshold): This is the threshold on the lower eigenvalue for keeping a corner. Lowering the threshold allows more corners to be drawn. The strength of the neighborhood eigenvalues were determined by varying the threshold value and seeing which neighborhoods remained and which were removed. <br>
+<br>
+The following are results from the corner detector using the best parameters I could find. The images are grayscale from 0 to 255. The csxcs region a corner was detected in is outlined in black. The images are as follows, <br>
+1. Magnitude of the x gradient after blurring. 2. Magnitude of the y gradient after blurring. 3. Magnitude of the total gradient after blurring. <br>
+4. The final image with the corners drawn on. <br>
+<br>
+To get all the corners on the checkerboard the following settings were used. Because the checkerboard has clear, sharp corners that are high contrasting from black to white, the corners are easy to find. Also certain corners that are extra strong have two or more neighborhoods connected to each other.<br>
+m = 11, sig = 1, cs = 15, thresh = 40000 <br>
+<br>
+  <img src = "Corner Images/Checkers/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Checkers/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Checkers/ES.png" width="484" height="388">
+  <img src = "Corner Images/Checkers/corner.png" width="484" height="388">
+<br>
+<br>
+To produce the best settings for the building image, it was necessary to increase the neighborhood for each corner, cs, to capture large corners. From varying the threshold value, the strongest corners appear to be near the windows on the left side of the image and near the two towers on the bottom right side of the image. These may not necessarily be what we would call corners, but they are where the eigenvalues are very strong. <br>
+m = 11, sig = 1, cs = 23, thresh = 65000 <br>
+<br>
+  <img src = "Corner Images/Building/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Building/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Building/ES.png" width="484" height="388">
+  <img src = "Corner Images/Building/corner.png" width="484" height="388">
+<br> 
+<br>
+These are the results from the corner detector on other images using parameters that seemed to appropriately capture the corners. <br>
+This image was blurred with a higher sigma to reduce the amount of edges the fur triggers. The strongest corners are around the eyes. <br>
+m = 15, sig = 2, cs = 17, thresh = 8500 <br>
+<br>
+  <img src = "Corner Images/Mandrill/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Mandrill/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Mandrill/ES.png" width="484" height="388">
+  <img src = "Corner Images/Mandrill/corner.png" width="484" height="388">
+<br> 
+<br>
+As would be expected the strongest corners are detected around the lettering, where there are sharp turns and high contrasts. <br>
+m = 11, sig = 1, cs = 11, thresh = 30000 <br>
+<br>
+  <img src = "Corner Images/Mercedes/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Mercedes/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Mercedes/ES.png" width="484" height="388">
+  <img src = "Corner Images/Mercedes/corner.png" width="484" height="388">
+<br> 
+<br>
+The corners in this image are hard to define, but the edge detector does a good job of picking out the tips of the leafs and points along the branch that stand out. The strongest corners are near the tips of the leafs. <br>
+m = 13, sig = 1, cs = 15, thresh = 15000 <br>
+<br>
+  <img src = "Corner Images/Leaf/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Leaf/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Leaf/ES.png" width="484" height="388">
+  <img src = "Corner Images/Leaf/corner.png" width="484" height="388">
+<br> 
+<br>
+These settings were chosen so a corner appears at the lighthouse. The lighthouse is the weakest corner in this image, the strongest are in the rocks towards the bottom left of the image. <br>
+m = 19, sig = 2, cs = 15, thresh = 13000 <br>
+<br>
+  <img src = "Corner Images/Lighthouse/Gx.png" width="484" height="388">
+  <img src = "Corner Images/Lighthouse/Gy.png" width="484" height="388">
+  <img src = "Corner Images/Lighthouse/ES.png" width="484" height="388">
+  <img src = "Corner Images/Lighthouse/corner.png" width="484" height="388">
+<br> 
+<br>
+<br>
+  <strong> SIFT Feature Detector </strong> <br>
+    NOTE: The sift algorithm runs kind of slow so I included some progress indicators. The first one is for the initial localization of all potential points, it shows how many octaves are remaining. The second one is for Thresholding all of these points, it shows how many levels are remaining. <br>
+    There are 6 parameters for the SIFT algorithm, there purpose and the affect of changing them are described below. <br>
+    Parameters: <br>
+    1. m (size of gaussian filter): This works the same as before, m needs to be big enough to contain the entire gaussian. Because there will be s+3 gaussian functions generated, where s is another parameter, and they will all be a factor of k apart, where k is given in the paper as 2^(1/s), it is necessary to make m big enough to contain the largest gaussian that will be generated. Therefore m will tend to be much larger than it was in the previous algorithms. <br>
+    2. siginit (initial sigma of gaussian filter): Siginit is the initial sigma value for the gaussian pyramid that will be created. Successive gaussian pyramids are created using the same sigma value but the image is downscaled so the gaussians have twice the effect. The initial sigma given in the paper is 1.6. <br>
+    3. octaves (number of octaves in laplacian pyramid): Each octave is another gaussian pyramid. The paper gives 4 as the standard number, but this can be lowered to speed up running time. <br>
+    4. ct (contrast threshold): This is the threshold for removing points based on their value in the laplacian pyramid. This requires first finding the true value for each sample point, as the paper describes. This threshold is a percentage of the maximum sample value. <br>
+    5. rt (edge threshold): This is the threshold for removing edge points, which is determined from the hessian matrix calculated around each point. <br>
+    6. s (number of sample regions per octave): This determines the size of each octave. The paper gives s = 3 as the standard value, which gives 3 sampling levels per octave, which is 5 laplacians per octave, which is 6 gaussians per octave. <br>
+<br>
+The images are formatted the following way: <br>
+1. Original intensity image. 2-17. The pyramid of laplacians. 
+. 3. Magnitude of the y gradient after blurring. <br>
+4. Magnitude of the total gradient after blurring. 5. Magnitude gradient trimmed. 6. Final output of the edge detector. <br>
+The images are grayscale from 0 to 255. <br>
+
+ </body>
+</html>

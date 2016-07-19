@@ -1,0 +1,307 @@
+<html>
+ <head>
+  <title>Crispin Bernier</title>
+ </head>
+ <body>
+    I am using my 2 remaining late days for this assignment. <br>
+<br>
+The images in this writeup in their true resolutions are contained in the 'writeup images' folder. All the images used for testing are contained in the 'Test Images' folder. The 'Faces' folder contains the faces that were extracted from the test images, the 'ChosenFaces' folder contains 100 of these faces. The 'ChosenNoFaces' contains 100 randomly selected patches from the 'No Faces' folder in 'Test Images'. 'GaussResults' and 'LinearResults' hold the results from gauss.m and linear.m respectively.
+<br>
+Here are the order that commands should be run to perform the desired face detection.<br>
+<br>
+%% Set up<br>
+% To generate the 100 face and non-faces run gendset. The patches will be contained in 'ChosenFaces' and 'ChosenNoFaces'.<br>
+gendset();<br>
+<br>
+% To generate the collage of faces and non-faces run collage, this function returns the collage.<br>
+collage = collage();<br>
+<br>
+% To get the desired image to be tested, run getImage('image name.png').<br> 
+img = getImage('runners.png');<br>
+<br>
+%% Running gaussian algorithm<br>
+% To run the gaussian algorithm run gauss with the desired non-maximum suppression area M and image img. The thresholds can be altered by looking at the 'Parameters' section in the gauss.m file. Results will be written to the 'GaussResults' folder.<br>
+gauss(M, img);<br>
+<br>
+%% Running linear algorithm<br>
+% To generate the weighting vector run weights. The learning rate and maximum iterations can be changed by looking at the 'Parameters' section in the weights.m file. Also the matlab.mat file contains the 3 weighting vectors used in the writeup. wgood is the optimal weighting vector from the writeup, wbad is the vector with a higher mu, and wlim is the weighting vector with less iterations.<br>
+w = weights();<br>
+<br>
+% To run the linear algorithm run linear with the desired non-maximum suppression area M, image img, and weighting vector w. The results will be written to the 'LinearResults' folder.<br>
+linear(M, img, w);<br>
+<br>
+%% Gaussian Pyramid<br>
+% To generate a gaussian pyramid of an image run pyramid with the desired image img, number of layers, downsampling rate, sigma, and filtersize. The pyramid will be written to the 'ImagePyramid' folder.<br>
+pyramid(img, 8, 6, 0.8, 13);<br>
+<br>
+<br>
+  <strong> Training Dataset </strong> <br>
+    The training faces were randomly sampled from the 'Faces' folder. The faces in this folder were generated using the provided MIT-CMU data. The faces were captured so that the eyes, nose, and mouth would be captured but anything outside of that region would be cut off. This was done because anything outside of that area varies greatly from person to person and would be hard to build a classifier for. The 22 non face images were chosen randomly from images from the internet with no faces in them. These images were partly chosen to represent areas that are found near faces that aren't faces, for example I tried to have lots of images with clothing in them.
+<br>
+<br>
+  <img src = "writeup images/collage.png" width="480" height="240">
+<br>
+<br>
+  <strong> Gaussian Pyramid </strong> <br>
+    There are 4 parameters for the gaussian face detector, there purpose and the affect of changing them are described below. <br>
+    Parameters: <br>
+    1. layers: This determines the number of images to be created, the first layer is the original image with no downsampling. <br>
+    2. dscale (downsampling rate): Every dscale'th collumn and row will be removed from the image, for example if dscale=3 each layer will be 2/3 the size of the layer above. <br>
+    3. sig (threshold value): Before downsampling occurs the image is blurred with sig. Sig is decreased with each downsampling to reduce the effect of blurring. If sig is too large the image will be overblurred and wont accurately represent the original image, and if sig is too small then downsampling will overly reduce the fidelity of the image. <br>
+    4. filtersize: The filtersize needs to be large enough to hold the entire gaussian distribution, it should also be odd. <br>
+<br>
+The following settings were found to work best for downsampling. All subsequent examples are done using the following settings for a gaussian pyramid. <br>
+layers = 8, dscale = 6, sig = 0.8, filtersize = 13. <br>
+<br>
+  <img src = "writeup images/Pyramid/Runners/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Pyramid/Runners/ImageLevel7.png" width="320" height="240">
+  <img src = "writeup images/Pyramid/Runners/ImageLevel6.png" width="266" height="200">
+  <img src = "writeup images/Pyramid/Runners/ImageLevel5.png" width="222" height="166">
+  <img src = "writeup images/Pyramid/Runners/ImageLevel4.png" width="185" height="138">
+  <img src = "writeup images/Pyramid/Runners/ImageLevel3.png" width="154" height="115">
+  <img src = "writeup images/Pyramid/Runners/ImageLevel2.png" width="128" height="96">
+  <img src = "writeup images/Pyramid/Runners/ImageLevel1.png" width="107" height="80">
+<br>
+<br>
+<br>
+  <img src = "writeup images/Pyramid/Obama/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Pyramid/Obama/ImageLevel7.png" width="320" height="240">
+  <img src = "writeup images/Pyramid/Obama/ImageLevel6.png" width="266" height="200">
+  <img src = "writeup images/Pyramid/Obama/ImageLevel5.png" width="222" height="166">
+  <img src = "writeup images/Pyramid/Obama/ImageLevel4.png" width="185" height="138">
+  <img src = "writeup images/Pyramid/Obama/ImageLevel3.png" width="154" height="115">
+  <img src = "writeup images/Pyramid/Obama/ImageLevel2.png" width="128" height="96">
+  <img src = "writeup images/Pyramid/Obama/ImageLevel1.png" width="107" height="80">
+<br>
+<br>
+<br>
+  <img src = "writeup images/Pyramid/Batman/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Pyramid/Batman/ImageLevel7.png" width="320" height="240">
+  <img src = "writeup images/Pyramid/Batman/ImageLevel6.png" width="266" height="200">
+  <img src = "writeup images/Pyramid/Batman/ImageLevel5.png" width="222" height="166">
+  <img src = "writeup images/Pyramid/Batman/ImageLevel4.png" width="185" height="138">
+  <img src = "writeup images/Pyramid/Batman/ImageLevel3.png" width="154" height="115">
+  <img src = "writeup images/Pyramid/Batman/ImageLevel2.png" width="128" height="96">
+  <img src = "writeup images/Pyramid/Batman/ImageLevel1.png" width="107" height="80">
+<br>
+<br>
+  <strong> Gaussian Detector </strong> <br>
+    There are 2 parameters for the gaussian face detector, there purpose and the affect of changing them are described below. <br>
+    Parameters: <br>
+    1. tau (threshold value): Tau is the threshold value above which the singular values are kept, there are seperate taus for the face and non-face classes. Tau was chosen so that it intersects the "knee" of the singular value curves. Increasing tau decreases k, which is the number of singular values. Changing k has a significant effect on the output images. When k decreases for a class, the overall probability of that class increases significantly. I found that the detector worked best when k was the same for both the face and non-face classes. <br>
+    2. M (non-maximum suppression area): M is the area around each detected face used for non-maximum suppression. Increasing M makes the image less cluttered and makes it easier to see where the strongest faces are detected. <br>
+<br>
+The following images show the average face and the average non face calculated from the 200 sample patches.<br>
+<br>
+  <img src = "writeup images/AverageFace.png" width="240" height="240">
+  <img src = "writeup images/AverageNoFace.png" width="240" height="240">
+<br>
+<br>
+The following figures show the singular value curves for the face and non face distributions. The threshold tau for each class is shown in green. <br>
+<br>
+  <img src = "writeup images/FaceCurve.png" width="480" height="480">
+  <img src = "writeup images/NoFaceCurve.png" width="480" height="480">
+<br>
+<br>
+The resulting images are formatted the following way: <br>
+1. Original image. 2-9. The gaussian pyramid of the image in decreasing order of resolution with the detected faces drawn on. The detected faces are color coded by the probability of being a face. The top quarter of probabilities are in red, the next quarter in yellow, then green, and the lowest quarter are in blue. Note that although the images are all shown at the same size they are in fact at different resolutions, and the detected face regions are each 12x12.  Also note that a 12x12 patch of the average face shown above is inserted into the top left corner of each image. This is done to check that the algorithm is working, before any downscaling occurs this patch should be strongly detected as a face. <br>
+<br>
+The first example is the runners image using a nonmaximum suppression area of 12. The threshold values are set so k for each class is equal. The image is very cluttered with detected faces, however pavement, white clothing, and the sky in the upper left are regions where the detector found the probability of there not being a face greater then there being a face. <br>
+M = 12, tauf = 0.8*10^4, taunf = 0.92*10^4, image = runners.png.<br>
+<br>
+  <img src = "writeup images/Gauss/Runners/runners.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Runners/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Runners/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Runners/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Runners/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Runners/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Runners/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Runners/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Runners/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The following shows the same image with larger non-maximum suppression area and the same thresholds. With these images it is easier to see where the strongest faces are detected. The face detector appears to detect upright nose regions rather then entire faces, this is shown really well on runner B7224 at images 4-6 which are the intermediate scale levels.  <br>
+M = 48, tauf = 0.8*10^4, taunf = 0.92*10^4, image = runners.png.<br>
+<br>
+  <img src = "writeup images/Gauss/RunnersM/runners.png" width="384" height="288">
+  <img src = "writeup images/Gauss/RunnersM/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Gauss/RunnersM/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Gauss/RunnersM/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Gauss/RunnersM/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Gauss/RunnersM/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Gauss/RunnersM/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Gauss/RunnersM/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Gauss/RunnersM/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The second example is the Obama image using a nonmaximum suppression area of 36 and the same thresholds as before. These thresholds produce k=4 for each class. As before the face detector detects noses better than entire faces. This is exemplified with Obama's face in images 5-7. The upper region of the nose is detected very well there. <br>
+M = 36, tauf = 0.8*10^4, taunf = 0.92*10^4, image = obama.png.<br>
+<br>
+  <img src = "writeup images/Gauss/Obama/obama.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Obama/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Obama/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Obama/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Obama/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Obama/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Obama/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Obama/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Obama/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The following shows the Obama image with a higher tau for the non-face class. With these thresholds k=4 for the faces and k=3 for the non-faces. As the images show decreasing k for a class significantly increases the probability of that class. The probability of non-face patches has increased significantly and there aren't nearly as many detected faces as before. <br>
+M = 36, tauf = 0.8*10^4, taunf = 1.0*10^4, image = obama.png.<br>
+<br>
+  <img src = "writeup images/Gauss/ObamaT/obama.png" width="384" height="288">
+  <img src = "writeup images/Gauss/ObamaT/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Gauss/ObamaT/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Gauss/ObamaT/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Gauss/ObamaT/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Gauss/ObamaT/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Gauss/ObamaT/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Gauss/ObamaT/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Gauss/ObamaT/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The third example is the batman image using a nonmaximum suppression area of 36 and the standard thresholds. Notice that the sky region in the background does not have faces detected in it. <br>
+M = 36, tauf = 0.8*10^4, taunf = 0.92*10^4, image = batman.png.<br>
+<br>
+  <img src = "writeup images/Gauss/Batman/batman.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Batman/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Batman/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Batman/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Batman/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Batman/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Batman/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Batman/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Gauss/Batman/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The following shows the same image with a higher tau for the non-face class. These thresholds produce k=2 for the faces and k=4 for the non-faces. As before, decreasing k for a class significantly increases the probability of that class and regions where faces weren't detected before now have faces detected in them. <br>
+M = 36, tauf = 2.0*10^4, taunf = 0.92*10^4, image = batman.png.<br>
+<br>
+  <img src = "writeup images/Gauss/BatmanT/batman.png" width="384" height="288">
+  <img src = "writeup images/Gauss/BatmanT/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Gauss/BatmanT/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Gauss/BatmanT/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Gauss/BatmanT/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Gauss/BatmanT/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Gauss/BatmanT/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Gauss/BatmanT/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Gauss/BatmanT/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+  <strong> Linear Classifier </strong> <br>
+    There are 3 parameters for the linear classifier. <br>
+    Parameters: <br>
+    1. mu (learning rate): The learning rate affects how much the weight vector changes with each iteration of gradient descent. I found that mu needs to be very small to ensure that gradient descent works properly. If mu is too large the weighting vector doesn't produce good results, each image patch will return either 0 or 1 and it is impossible to see which patches have the strongest probability of being a face. <br>
+    2. maxiter (Number of iterations): This is the number of iterations for the gradient descent algorithm. Each iteration improves the accuracy of the classifier. <br>
+    3. M (non-maximum suppression area): This works the same as for the gaussian detector. <br>
+<br>
+The following figures show the error curves for the gradient descent. The percent of correctly identified patches is shown for each iteration. On the first iteration half the patches are correctly identified, and when the gradient descent algorithm works properly this value increases for each subsequent iteration untill it begins to flatten out. The first error curve below shows the algorithm working properly. Note that the curve doesn't flatten out at exactly 1, this could be because the classifier is having a hard time determining a linear boundry between faces and non-faces, for example the boundary may be more circular. <br>
+mu = 3.5*10^-11, maxiter = 2.5*10^4<br>
+<br>
+  <img src = "writeup images/ErrorCurve.png" width="480" height="480">
+<br>
+<br>
+This next error curve is taken using a learning rate much higher then before. While the curve does level out at 100% correctly identified, whereas previously it leveled out at around 91%, the curve jumps up and down and does not improve on each iteration. As the example images will show this classifier is not very good at detecting faces.<br>
+mu = 0.1, maxiter = 2.5*10^4<br>
+<br>
+  <img src = "writeup images/Linear/RunnersMu/ErrorCurve.png" width="480" height="480">
+<br>
+<br>
+The final error curve is the same as the first one but with less iterations. As the example images will show this classifier is not very good at detecting faces. <br>
+mu = 3.5*10^-11, maxiter = 0.5*10^4<br>
+<br>
+  <img src = "writeup images/Linear/ObamaI/ErrorCurve.png" width="480" height="480">
+<br>
+<br>
+The resulting images are formatted same way as with the gaussian detector. <br>
+<br>
+The first example is the runners image with the same weighting vector that generated the first error curve above. The gaussian detector appears to have performed better on this image as the linear detector doesn't detect strong faces as accurately where there are faces. <br>
+M = 24, mu = 3.5*10^-11, maxiter = 2.5*10^4,image = runners.png.<br>
+<br>
+  <img src = "writeup images/Linear/Runners/runners.png" width="384" height="288">
+  <img src = "writeup images/Linear/Runners/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Linear/Runners/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Linear/Runners/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Linear/Runners/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Linear/Runners/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Linear/Runners/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Linear/Runners/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Linear/Runners/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The following images show the same image but using the weighting vector generated from the second error curve. These images show that although the error curve leveled out at 100% it is not very accurate. It outputs many more false positives then before and every face has 100% probability of being a face. Because all of the probabilities are the same there is no way to order them by probability so the first 1/4 are assigned the highest probability (red), the next 1/4 yellow, and so on. <br>
+M = 24, mu = 0.1, maxiter = 2.5*10^4,image = runners.png.<br>
+<br>
+  <img src = "writeup images/Linear/RunnersMu/runners.png" width="384" height="288">
+  <img src = "writeup images/Linear/RunnersMu/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Linear/RunnersMu/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Linear/RunnersMu/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Linear/RunnersMu/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Linear/RunnersMu/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Linear/RunnersMu/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Linear/RunnersMu/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Linear/RunnersMu/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The second example is the Obama image using the optimal weighting vector from the first error curve. These images are similar to the gaussian detector in how the face detector detects the upper nose region. This is exemplified in images 4-7 where the upper region of Obama and Cameron's noses are detected strongly. These images also show the face patch inserted in the upper left of the image being detected strongly. <br>
+M = 24, mu = 3.5*10^-11, maxiter = 2.5*10^4, image = obama.png.<br>
+<br>
+  <img src = "writeup images/Linear/Obama/obama.png" width="384" height="288">
+  <img src = "writeup images/Linear/Obama/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Linear/Obama/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Linear/Obama/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Linear/Obama/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Linear/Obama/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Linear/Obama/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Linear/Obama/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Linear/Obama/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The following images show the same image but using the weighting vector generated from the third error curve. These images show the inacuracies of this weighting vector as it did not have enough iterations to draw a clear boundary between face and non-face patches. This inaccuracy is shown in the face patch that has been in the top left of each image. In the previous example this face patch was detected strongly, however using this less accurate weighting vector the face patch is detectly weakly. Cameron's face is also no longer detected strongly. <br>
+M = 24, mu = 3.5*10^-11, maxiter = 0.3*10^4, image = obama.png.<br>
+<br>
+  <img src = "writeup images/Linear/ObamaI/obama.png" width="384" height="288">
+  <img src = "writeup images/Linear/ObamaI/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Linear/ObamaI/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Linear/ObamaI/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Linear/ObamaI/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Linear/ObamaI/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Linear/ObamaI/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Linear/ObamaI/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Linear/ObamaI/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The third example is the batman image using the optimal weighting vector from the first error curve. Neither the gaussian or the linear detector did a good job with this image, however both managed to ignore most of the sky in the background. <br>
+M = 24, mu = 3.5*10^-11, maxiter = 2.5*10^4, image = batman.png.<br>
+<br>
+  <img src = "writeup images/Linear/Batman/batman.png" width="384" height="288">
+  <img src = "writeup images/Linear/Batman/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Linear/Batman/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Linear/Batman/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Linear/Batman/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Linear/Batman/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Linear/Batman/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Linear/Batman/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Linear/Batman/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+The following images show the batman image with a larger non-maximum suppression region. This has the same effect as it did for the gaussian detector, it makes it easier to see where the strongest faces are detected. <br>
+M = 36, mu = 3.5*10^-11, maxiter = 2.5*10^4, image = batman.png.<br>
+<br>
+  <img src = "writeup images/Linear/BatmanM/batman.png" width="384" height="288">
+  <img src = "writeup images/Linear/BatmanM/ImageLevel8.png" width="384" height="288">
+  <img src = "writeup images/Linear/BatmanM/ImageLevel7.png" width="384" height="288">
+  <img src = "writeup images/Linear/BatmanM/ImageLevel6.png" width="384" height="288">
+  <img src = "writeup images/Linear/BatmanM/ImageLevel5.png" width="384" height="288">
+  <img src = "writeup images/Linear/BatmanM/ImageLevel4.png" width="384" height="288">
+  <img src = "writeup images/Linear/BatmanM/ImageLevel3.png" width="384" height="288">
+  <img src = "writeup images/Linear/BatmanM/ImageLevel2.png" width="384" height="288">
+  <img src = "writeup images/Linear/BatmanM/ImageLevel1.png" width="384" height="288">
+<br>
+<br>
+I think the linear classifier works better then the gaussian detector. The gaussian detector produces many more false positives then the linear detector, this is especially evident in the obama image examples. The gaussian detector fires across the entire image while the linear classifier is more limited. I believe adding priors to the gaussian detector would make it less sensitive to false positives and possibly make it perform better then the linear classifier. Both detectors produce many false positives. These detectors also only work on upright faces facing the camera.
+<br>
+ </body>
+</html>
