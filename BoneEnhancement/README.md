@@ -14,7 +14,7 @@ Differential
 <br>
 Reflection Numbers
 <br>
-<img src="Matlab/4reflectionnumbers.png" width="200"> 
+<img src="Matlab/4reflection numbers.png" width="200"> 
 <br>
 Shadow Image
 <br>
